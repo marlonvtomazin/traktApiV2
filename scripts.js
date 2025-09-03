@@ -37,7 +37,7 @@ function getBearer() {
         "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
         "grant_type": "authorization_code",
     }
-    var headers = { 'content-type': 'application/json', "Access-Control-Allow-Origin": "*" }
+    var headers = { 'content-type': 'application/json', "Access-Control-Allow-Origin": "https://traktapiv2.netlify.app/" }
     var response = axios.post("https://api.trakt.tv/oauth/token", jsonBody, { headers: headers })
         .then(response => {
             if (response.data.access_token && response.data.token_type) {
