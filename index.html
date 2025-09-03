@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Trakt API V2</title>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Trakt Api V2</div>
+    </header>
+
+    <div class="container">
+        <div class="form-group">
+            <label id="username-label">Username</label>
+            <input type="text" id="username" placeholder="Type your username">
+        </div>
+        <div class="form-group">
+            <label id="authorizeCode-label">AuthorizeCode</label>
+            <input type="text" id="authorizeCode" placeholder="Type your authorizeCode">
+        </div>
+        <div class="form-group">
+            <label id="clientID-label">ClientID</label>
+            <input type="text" id="clientID" placeholder="Type your clientID">
+        </div>
+        <div class="form-group">
+            <label id="clientSecret-label">ClientSecret</label>
+            <input type="text" id="clientSecret" placeholder="Type your ClientSecret">
+        </div>
+        <div class="form-group">
+            <button class="btn btnGenerateToken" id="generateToken">Generate Token</button>
+        </div>
+
+        <div class="form-group">
+            <label id="authToken">Auth Token</label>
+            <input type="password" id="clientSecret">
+        </div>
+
+        <div class="form-group">
+            <label id="typeSelect-label">Select your download:</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="movies" value="movies" name="radio">
+                    <label class="radio-label" for="movies-label">Movies</label>
+                </div>
+
+                <div class="radio-option">
+                    <input type="radio" id="series" value="shows" name="radio">
+                    <label class="radio-label" for="shows-label">TV Series</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <button class="btn btnGenerateXlsx" id="generateSpreadsheet">Generate Spreadsheet</button>
+        </div>
+    </div>
+
+</body>
+
+<script type="module" src="./scripts.js"> </script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</html>
