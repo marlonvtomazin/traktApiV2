@@ -6,6 +6,7 @@ const traktApiKey = process.env.TRAKT_CLIENT_ID;
 
 // A função 'handler' é o ponto de entrada da sua Netlify Function
 exports.handler = async (event) => {
+    console.log("Função Netlify ativada.");
     const { httpMethod, path, queryStringParameters, body } = event;
 
     if (httpMethod === 'GET' && path.endsWith('/download-spreadsheet')) {
