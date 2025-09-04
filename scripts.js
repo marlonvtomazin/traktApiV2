@@ -12,13 +12,21 @@ generateSpreadsheetButton.addEventListener("click", function() {
     }
 
     const downloadType = tipoSelecionado.value;
-    // O URL agora aponta para a sua função Netlify
-    const downloadUrl = `/.netlify/functions/trakt-proxy?username=${username}&type=${downloadType}`;
     
-    axios.get(downloadUrl, {
+    // A URL aponta para a nova rota POST
+    const downloadUrl = `/api/create-spreadsheet`;
+
+    // Dados são enviados no corpo da requisição
+    const requestBody = {
+        username: username,
+        downloadType: downloadType
+    };
+
+    axios.post(downloadUrl, requestBody, {
         responseType: 'blob'
     })
     .then(response => {
+        // A lógica de download permanece a mesma
         const blob = new Blob([response.data], { type: response.headers['content-type'] });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -41,6 +49,22 @@ generateSpreadsheetButton.addEventListener("click", function() {
     })
     .catch(error => {
         console.error("Erro no download:", error);
-        alert("Não foi possível gerar o download. Verifique o nome de usuário e as credenciais.");
+        
+        // Tenta ler a mensagem de erro da resposta do servidor
+        const reader = new FileReader();
+        reader.onload = function() {
+            try {
+                const errorData = JSON.parse(reader.result);
+                alert(`Erro: ${errorData.error}`);
+            } catch (e) {
+                alert("Ocorreu um erro desconhecido no servidor.");
+            }
+        };
+        // A resposta de erro é um blob, então precisamos ler o conteúdo
+        if (error.response && error.response.data) {
+             reader.readAsText(error.response.data);
+        } else {
+            alert("Não foi possível gerar o download. Verifique o nome de usuário e a sua conexão.");
+        }
     });
 });
