@@ -60,7 +60,7 @@ exports.handler = async (event) => {
         const ws = wb.addWorksheet('Dados');
 
         // Adicionando cabeçalhos e a lógica de contagem
-        const headers = (downloadType === 'movies') ? ['Movies', 'Times Watched'] : ['Show', 'Times Watched'];
+        const headers = (downloadType === 'movies') ? ['Movies', 'Times Watched', 'Last Watched'] : ['Show', 'Times Watched', 'Last Watched'];
         headers.forEach((header, index) => {
             ws.cell(1, index + 1).string(header).style({
                 font: {
@@ -77,14 +77,16 @@ exports.handler = async (event) => {
             const media = (downloadType === 'movies') ? item.movie : item.show;
             const title = media ? media.title : 'N/A';
             const plays = item.plays || 0;
-
+            const lastWatched = item.last_watched_at ? new Date(item.last_watched_at).toLocaleDateString() : 'N/A';
+            
             ws.cell(count, 1).string(title);
+            ws.cell(count, 3).string(lastWatched); // Nova coluna adicionada aqui
             ws.cell(count, 2).number(plays);
+            
             totalPlays += plays;
             count++;
         });
         
-        // Adicionando a linha com o total, como você solicitou
         const totalItems = count - 2;
         ws.cell(count + 1, 1).string(`Total de ${downloadType}: ${totalItems}`);
         ws.cell(count + 1, 2).string(`Total de ${downloadType === 'movies' ? 'filmes vistos' : 'episódios vistos'}: ${totalPlays}`);
