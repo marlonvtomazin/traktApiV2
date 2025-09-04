@@ -7,6 +7,7 @@ const traktApiKey = process.env.TRAKT_CLIENT_ID;
 exports.handler = async (event) => {
     // Log de teste para confirmar que a função está sendo executada
     console.log("Função Netlify ativada.");
+    console.log("Valor da TRAKT_CLIENT_ID:", traktApiKey);
 
     const { httpMethod, path, queryStringParameters, body } = event;
 
