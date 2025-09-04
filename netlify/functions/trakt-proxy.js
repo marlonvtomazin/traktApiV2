@@ -4,11 +4,13 @@ const Excel = require('excel4node');
 // Acessa a variável de ambiente com segurança
 const traktApiKey = process.env.TRAKT_CLIENT_ID;
 
-// A função 'handler' é o ponto de entrada da sua Netlify Function
 exports.handler = async (event) => {
+    // Log de teste para confirmar que a função está sendo executada
     console.log("Função Netlify ativada.");
+
     const { httpMethod, path, queryStringParameters, body } = event;
 
+    // Rota GET para gerar e fazer o download da planilha
     if (httpMethod === 'GET' && path.endsWith('/download-spreadsheet')) {
         try {
             const { username, type } = queryStringParameters;
@@ -17,6 +19,14 @@ exports.handler = async (event) => {
                 return {
                     statusCode: 400,
                     body: JSON.stringify({ error: 'Nome de usuário ou tipo de download não fornecido.' }),
+                };
+            }
+            
+            // Verifica se a chave da API está configurada
+            if (!traktApiKey) {
+                return {
+                    statusCode: 500,
+                    body: JSON.stringify({ error: 'A chave da API da Trakt (TRAKT_CLIENT_ID) não está configurada como uma variável de ambiente.' }),
                 };
             }
 
@@ -71,15 +81,27 @@ exports.handler = async (event) => {
             };
 
         } catch (error) {
-            return {
-                statusCode: error.response?.status || 500,
-                body: JSON.stringify({ error: 'Erro ao gerar a planilha. Verifique o nome de usuário e a chave da API.' }),
-            };
+            // Loga o erro completo para debug.
+            console.error('Ocorreu um erro na requisição:', error);
+            
+            if (error.response) {
+                console.error('Erro da API da Trakt:', error.response.status, error.response.data);
+                return {
+                    statusCode: error.response.status,
+                    body: JSON.stringify(error.response.data)
+                };
+            } else {
+                console.error('Erro de rede ou desconhecido:', error.message);
+                return {
+                    statusCode: 500,
+                    body: JSON.stringify({ error: 'Erro de rede ou no servidor. Tente novamente.' })
+                };
+            }
         }
     }
 
+    // Rota POST para obter o token de autenticação
     if (httpMethod === 'POST' && path.endsWith('/proxy')) {
-        // Lógica para obter o token de autenticação
         try {
             const body = JSON.parse(event.body);
             const response = await axios.post("https://api.trakt.tv/oauth/token", body, {
@@ -90,6 +112,7 @@ exports.handler = async (event) => {
                 body: JSON.stringify(response.data),
             };
         } catch (error) {
+            console.error('Ocorreu um erro no proxy de autenticação:', error);
             return {
                 statusCode: error.response?.status || 500,
                 body: JSON.stringify({ error: 'Erro no proxy de autenticação.' }),
