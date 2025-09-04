@@ -1,63 +1,46 @@
-const generateToken = document.getElementById("generateToken")
-const usernameInput = document.getElementById("username")
+const generateSpreadsheetButton = document.getElementById("generateSpreadsheet");
+const usernameInput = document.getElementById("username");
 const radioButtons = document.getElementsByName('radio');
 
-const username = document.getElementById('username');
-const authorizeCode = document.getElementById('authorizeCode');
-const clientID = document.getElementById('clientID');
-const clientSecret = document.getElementById('clientSecret');
+generateSpreadsheetButton.addEventListener("click", function() {
+    const username = usernameInput.value;
+    const tipoSelecionado = document.querySelector('input[name="radio"]:checked');
 
-//import * as axios from 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js';
-//import userConfig from './userConfig.json' with { type: 'json' };
-
-generateToken.onclick = function () {
-    let authToken = getBearer()
-    console.log("Token: " + authToken)
-    alert(authToken)
-}
-
-// Adiciona um listener para cada botão, ou ao formulário
-document.addEventListener('change', function () {
-    // Seleciona o elemento de rádio que está checado no grupo 'radio'
-    const radioSelecionado = document.querySelector('input[name="radio"]:checked');
-    alert(radioSelecionado.value);
-})
-
-
-
-function getBearer() {
-    console.log(username.value)
-    console.log(authorizeCode.value)
-    console.log(clientID.value)
-    console.log(clientSecret.value)
-    var jsonBody = {
-        "code": authorizeCode.value,//userConfig.authorizeCode,
-        "client_id": clientID.value,//userConfig.clientID,
-        "client_secret": clientSecret.value,//userConfig.clientSecret,
-        "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
-        "grant_type": "authorization_code",
+    if (!username || !tipoSelecionado) {
+        alert("Por favor, preencha o nome de usuário e selecione o tipo de download.");
+        return;
     }
-    var headers = {
-        'content-type': 'application/json',
-        "Access-Control-Allow-Origin": "https://traktapiv2.netlify.app/",
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Access-Control-Allow-Methods': '*',
-    }
-    var response = axios.post("https://api.trakt.tv/oauth/token", jsonBody, { headers: headers })
-        .then(response => {
-            if (response.data.access_token && response.data.token_type) {
-                console.log("authToken found: " + response.data.token_type + " " + response.data.access_token)
-                userConfig.authToken = response.data.token_type + " " + response.data.access_token
-                //fs.writeFileSync(filePath, JSON.stringify(userConfig));
-                return userConfig.authToken
-            } else if (response.data.error) {
-                console.log("Error: " + response.data.error_description)
-            }
-        })
-        .catch(err => {
-            console.log('Error: ', err.message);
-            return false
-        });
 
-}
-
+    const downloadType = tipoSelecionado.value;
+    // O URL agora aponta para a sua função Netlify
+    const downloadUrl = `/.netlify/functions/trakt-proxy?username=${username}&type=${downloadType}`;
+    
+    axios.get(downloadUrl, {
+        responseType: 'blob'
+    })
+    .then(response => {
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        
+        const contentDispositionHeader = response.headers['content-disposition'];
+        const filenameMatch = /filename="([^"]+)"/.exec(contentDispositionHeader);
+        
+        if (filenameMatch && filenameMatch.length > 1) {
+            a.download = filenameMatch[1];
+        } else {
+            a.download = `${username}_${downloadType}.xlsx`;
+        }
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        window.URL.revokeObjectURL(url);
+        a.remove();
+    })
+    .catch(error => {
+        console.error("Erro no download:", error);
+        alert("Não foi possível gerar o download. Verifique o nome de usuário e as credenciais.");
+    });
+});
