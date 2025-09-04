@@ -4,9 +4,6 @@ const Excel = require('excel4node');
 const traktApiKey = process.env.TRAKT_CLIENT_ID;
 
 exports.handler = async (event) => {
-    // Log de teste para confirmar que a função está sendo executada
-    console.log("Função Netlify ativada.");
-
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -33,15 +30,23 @@ exports.handler = async (event) => {
         }
 
         const url = `https://api.trakt.tv/users/${username}/watched/${downloadType}`;
-        console.log(`Fazendo requisição para a Trakt API: ${url}`);
-
-        const response = await axios.get(url, {
-            headers: {
-                'trakt-api-version': '2',
-                'trakt-api-key': traktApiKey,
-            },
-            timeout: 8000
-        });
+        
+        let response;
+        try {
+            response = await axios.get(url, {
+                headers: {
+                    'trakt-api-version': '2',
+                    'trakt-api-key': traktApiKey,
+                },
+                timeout: 8000
+            });
+        } catch (axiosError) {
+            console.error("Erro interno do Axios:", axiosError.message);
+            if (axiosError.response) {
+                console.error("Erro da API da Trakt:", axiosError.response.status, axiosError.response.data);
+            }
+            throw axiosError;
+        }
 
         const data = response.data;
         if (data.length === 0) {
@@ -54,23 +59,35 @@ exports.handler = async (event) => {
         const wb = new Excel.Workbook();
         const ws = wb.addWorksheet('Dados');
 
-        const headers = ['Título', 'Ano', 'Visto em'];
+        // Adicionando cabeçalhos e a lógica de contagem
+        const headers = (downloadType === 'movies') ? ['Movies', 'Times Watched'] : ['Show', 'Times Watched'];
         headers.forEach((header, index) => {
-            ws.cell(1, index + 1).string(header);
+            ws.cell(1, index + 1).string(header).style({
+                font: {
+                    bold: true
+                }
+            });
+            ws.column(index + 1).setWidth(headers[index] === 'Movies' || headers[index] === 'Show' ? 50 : 20);
         });
 
-        let row = 2;
+        let count = 2;
+        let totalPlays = 0;
+
         data.forEach(item => {
-            const media = downloadType === 'movies' ? item.movie : item.show;
+            const media = (downloadType === 'movies') ? item.movie : item.show;
             const title = media ? media.title : 'N/A';
-            const year = media ? media.year : 'N/A';
-            const lastWatched = item.last_watched_at ? new Date(item.last_watched_at).toLocaleDateString() : 'N/A';
+            const plays = item.plays || 0;
 
-            ws.cell(row, 1).string(title);
-            ws.cell(row, 2).number(year);
-            ws.cell(row, 3).string(lastWatched);
-            row++;
+            ws.cell(count, 1).string(title);
+            ws.cell(count, 2).number(plays);
+            totalPlays += plays;
+            count++;
         });
+        
+        // Adicionando a linha com o total, como você solicitou
+        const totalItems = count - 2;
+        ws.cell(count + 1, 1).string(`Total de ${downloadType}: ${totalItems}`);
+        ws.cell(count + 1, 2).string(`Total de ${downloadType === 'movies' ? 'filmes vistos' : 'episódios vistos'}: ${totalPlays}`);
 
         const buffer = await wb.writeToBuffer();
         const fileName = `${username}_${downloadType}.xlsx`;
@@ -86,15 +103,12 @@ exports.handler = async (event) => {
         };
 
     } catch (error) {
-        console.error('Ocorreu um erro na requisição:', error);
-        
         let statusCode = 500;
         let errorMessage = 'Erro de rede ou no servidor. Tente novamente.';
 
         if (error.response) {
             statusCode = error.response.status;
             errorMessage = JSON.stringify(error.response.data);
-            console.error('Erro da API da Trakt:', statusCode, errorMessage);
         } else if (error.message.includes('timeout')) {
             statusCode = 408;
             errorMessage = "Tempo limite da requisição excedido.";
