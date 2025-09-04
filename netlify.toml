@@ -1,11 +1,9 @@
 [build]
-  # Esta linha diz ao Netlify onde procurar pelas suas funções
   functions = "netlify/functions"
-  # Substitua 'dist' pela sua pasta de build, se for diferente
   publish = "."
 
-# Opcional: Redirecionamentos para URLs mais amigáveis
-# [[redirects]]
-#  from = "/proxy-api/:splat"
-#  to = "/.netlify/functions/trakt-proxy"
-#  status = 200
+[[redirects]]
+  from = "/api/create-spreadsheet"
+  to = "/.netlify/functions/create-spreadsheet"
+  status = 200
+  force = true
