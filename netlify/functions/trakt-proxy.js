@@ -31,11 +31,15 @@ exports.handler = async (event) => {
             }
 
             const url = `https://api.trakt.tv/users/${username}/watched/${type}`;
+            // Log de depuração para confirmar o ponto de execução
+            console.log("Fazendo requisição para a Trakt API...");
+
             const response = await axios.get(url, {
                 headers: {
                     'trakt-api-version': '2',
                     'trakt-api-key': traktApiKey,
-                }
+                },
+                timeout: 5000 // A requisição falhará se demorar mais de 5 segundos
             });
 
             const data = response.data;
