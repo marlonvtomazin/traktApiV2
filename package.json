@@ -1,0 +1,12 @@
+{
+  "name": "meu-site-estatico-trakt",
+  "version": "1.0.0",
+  "description": "Um site estático para interagir com a API da Trakt.",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

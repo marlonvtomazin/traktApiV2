@@ -1,7 +1,7 @@
 {
   "name": "netlify-functions",
   "version": "1.0.0",
-  "description": "",
+  "description": "Dependências para as Netlify Functions.",
   "main": "trakt-proxy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,9 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.11.0",
-    "cors": "^2.8.5",
-    "excel4node": "^1.8.2",
-    "express": "^5.1.0"
+    "axios": "^1.6.0",
+    "excel4node": "^1.8.2"
   }
 }
