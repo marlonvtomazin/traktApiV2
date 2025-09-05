@@ -9,58 +9,44 @@
 </head>
 
 <body>
-    <header>
-        <div class="logo">Trakt Api V2</div>
-    </header>
-
     <div class="container">
-        <div class="form-group">
-            <label id="username-label">Username</label>
-            <input type="text" id="username" placeholder="Type your username">
-        </div>
-        <div class="form-group">
-            <label id="authorizeCode-label">AuthorizeCode</label>
-            <input type="text" id="authorizeCode" placeholder="Type your authorizeCode">
-        </div>
-        <div class="form-group">
-            <label id="clientID-label">ClientID</label>
-            <input type="text" id="clientID" placeholder="Type your clientID">
-        </div>
-        <div class="form-group">
-            <label id="clientSecret-label">ClientSecret</label>
-            <input type="text" id="clientSecret" placeholder="Type your ClientSecret">
-        </div>
-        <div class="form-group">
-            <button class="btn btnGenerateToken" id="generateToken">Generate Token</button>
-        </div>
+        <header>
+            <h1>Trakt API V2</h1>
+            <h4>Downlaod your movies or TV Series</h4>
+        </header>
 
         <div class="form-group">
-            <label id="authToken">Auth Token</label>
-            <input type="password" id="clientSecret">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Digite seu nome de usuário">
         </div>
-
+        
         <div class="form-group">
-            <label id="typeSelect-label">Select your download:</label>
+            <label for="clientID">Client ID</label>
+            <input type="text" id="clientID" placeholder="Digite seu Client ID">
+        </div>
+        
+        <div class="form-group">
+            <label>Select your downlaod type:</label>
             <div class="radio-group">
                 <div class="radio-option">
-                    <input type="radio" id="movies" value="movies" name="radio">
-                    <label class="radio-label" for="movies-label">Movies</label>
+                    <input type="radio" id="movies" value="movies" name="radio" checked>
+                    <label class="radio-label" for="movies">Movies</label>
                 </div>
 
                 <div class="radio-option">
                     <input type="radio" id="series" value="shows" name="radio">
-                    <label class="radio-label" for="shows-label">TV Series</label>
+                    <label class="radio-label" for="series">TV Shows</label>
                 </div>
             </div>
         </div>
         
         <div class="form-group">
-            <button class="btn btnGenerateXlsx" id="generateSpreadsheet">Generate Spreadsheet</button>
+            <button class="btn btn-primary" id="generateSpreadsheet">spreadsheet</button>
         </div>
     </div>
-
 </body>
 
 <script type="module" src="./scripts.js"> </script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 </html>
