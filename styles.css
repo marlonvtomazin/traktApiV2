@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #1a1a2e;
@@ -16,29 +20,31 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     width: 100%;
     max-width: 450px;
-    box-sizing: border-box;
-    position: relative; /* Essencial para o posicionamento absoluto do botão */
-    /* Adicionado padding-bottom para criar espaço para o botão no rodapé */
-    padding-bottom: 70px; /* Ajuste este valor se o botão ficar muito colado ou distante */
+    position: relative;
+    padding-bottom: 70px; /* Adiciona espaço no rodapé para o botão de idioma */
 }
 
 header {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 25px;
 }
 
-header h1 {
+header h1, header h4 {
     color: #8be9fd;
-    margin-bottom: 5px; 
-    font-size: 1.8rem;
+    text-align: center;
     text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+    margin: 0;
+}
+
+header h1 {
+    font-size: 1.8rem;
 }
 
 header h4 {
-    color: #8be9fd;
+    font-size: 1.2rem;
     margin-top: 5px;
-    margin-bottom: 5px; 
-    text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
 }
 
 .form-group {
@@ -55,7 +61,6 @@ label {
 input[type="text"] {
     width: 100%;
     padding: 12px;
-    box-sizing: border-box;
     border: 1px solid #4a4a6e;
     border-radius: 6px;
     background-color: #3b3b5c;
@@ -118,12 +123,11 @@ input[type="text"]:focus {
     transform: translateY(-2px);
 }
 
-/* Estilos para o novo botão de idioma */
+/* Estilos para o botão de idioma, agora fixo no canto inferior esquerdo */
 .lang-toggle-container {
     position: absolute;
-    /* Ajustado para colar no canto */
-    bottom: 20px; /* Distância do fundo do container */
-    left: 20px;  /* Distância da esquerda do container */
+    bottom: 20px;
+    left: 20px;
     display: flex;
     gap: 0;
     background-color: #3b3b5c;
@@ -147,4 +151,29 @@ input[type="text"]:focus {
 .lang-btn.active-lang {
     background-color: #8be9fd;
     color: #1a1a2e;
+}
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 600px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+        padding-bottom: 70px;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .radio-option,
+    .radio-label {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .lang-toggle-container {
+        left: 20%;
+        transform: translateX(-50%);
+    }
 }
