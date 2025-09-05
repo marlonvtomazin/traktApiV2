@@ -5,43 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Trakt API V2</title>
+    <title>Gerador de Planilhas Trakt</title>
+    
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>Trakt API V2</h1>
-            <h4>Downlaod your movies or TV Series</h4>
+            <h1 id="title">Gerador de Planilhas Trakt</h1>
+            <h4 id="h4-title">Baixe uma lista com seus filmes ou séries</h4>
         </header>
 
+        <div class="lang-toggle-container">
+            <button id="lang-pt" class="lang-btn active-lang">PT-BR</button>
+            <button id="lang-en" class="lang-btn">EN</button>
+        </div>
+        
         <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username" id="username-label">Username</label>
             <input type="text" id="username" placeholder="Digite seu nome de usuário">
         </div>
         
         <div class="form-group">
-            <label for="clientID">Client ID</label>
+            <label for="clientID" id="client-id-label">Client ID</label>
             <input type="text" id="clientID" placeholder="Digite seu Client ID">
         </div>
         
         <div class="form-group">
-            <label>Select your download type:</label>
+            <label id="download-type-label">Selecione o tipo de download:</label>
             <div class="radio-group">
                 <div class="radio-option">
                     <input type="radio" id="movies" value="movies" name="radio" checked>
-                    <label class="radio-label" for="movies">Movies</label>
+                    <label class="radio-label" for="movies">Filmes</label>
                 </div>
 
                 <div class="radio-option">
                     <input type="radio" id="series" value="shows" name="radio">
-                    <label class="radio-label" for="series">TV Shows</label>
+                    <label class="radio-label" for="series">Séries</label>
                 </div>
             </div>
         </div>
         
         <div class="form-group">
-            <button class="btn btn-primary" id="generateSpreadsheet">Generate Spreadsheet</button>
+            <button class="btn btn-primary" id="generateSpreadsheet">Gerar Planilha</button>
         </div>
     </div>
 </body>

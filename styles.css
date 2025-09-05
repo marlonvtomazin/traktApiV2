@@ -17,10 +17,17 @@ body {
     width: 100%;
     max-width: 450px;
     box-sizing: border-box;
+    position: relative; /* Essencial para o posicionamento absoluto do botão */
+    /* Adicionado padding-bottom para criar espaço para o botão no rodapé */
+    padding-bottom: 70px; /* Ajuste este valor se o botão ficar muito colado ou distante */
+}
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 header h1 {
-    text-align: center;
     color: #8be9fd;
     margin-bottom: 5px; 
     font-size: 1.8rem;
@@ -28,10 +35,9 @@ header h1 {
 }
 
 header h4 {
-    text-align: center;
     color: #8be9fd;
     margin-top: 5px;
-    margin-bottom: 25px;
+    margin-bottom: 5px; 
     text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
 }
 
@@ -110,4 +116,35 @@ input[type="text"]:focus {
 .btn-primary:hover {
     background-color: #61dafb;
     transform: translateY(-2px);
+}
+
+/* Estilos para o novo botão de idioma */
+.lang-toggle-container {
+    position: absolute;
+    /* Ajustado para colar no canto */
+    bottom: 20px; /* Distância do fundo do container */
+    left: 20px;  /* Distância da esquerda do container */
+    display: flex;
+    gap: 0;
+    background-color: #3b3b5c;
+    border-radius: 6px;
+    border: 1px solid #4a4a6e;
+    overflow: hidden;
+    margin-left: 10px;
+}
+
+.lang-btn {
+    width: auto;
+    padding: 10px 15px;
+    background: none;
+    color: #b9b9d1;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.lang-btn.active-lang {
+    background-color: #8be9fd;
+    color: #1a1a2e;
 }
