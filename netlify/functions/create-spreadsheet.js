@@ -1,7 +1,7 @@
 const axios = require('axios');
 const Excel = require('excel4node');
 
-const traktApiKey = process.env.TRAKT_CLIENT_ID;
+//const traktClientSecret = process.env.TRAKT_CLIENT_SECRET;
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
@@ -13,19 +13,19 @@ exports.handler = async (event) => {
 
     try {
         const body = JSON.parse(event.body);
-        const { username, downloadType } = body;
+        const { username, downloadType, clientID } = body;
 
-        if (!username || !downloadType) {
+        if (!username || !downloadType || !clientID) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Nome de usuário ou tipo de download não fornecido.' }),
+                body: JSON.stringify({ error: 'Nome de usuário, tipo de download ou Client ID não fornecido.' }),
             };
         }
         
-        if (!traktApiKey) {
+        if (!clientID) {
             return {
                 statusCode: 500,
-                body: JSON.stringify({ error: 'A chave da API da Trakt (TRAKT_CLIENT_ID) não está configurada.' }),
+                body: JSON.stringify({ error: 'A chave da API da Trakt (clientID) não está sendo enviada.' }),
             };
         }
 
@@ -36,7 +36,7 @@ exports.handler = async (event) => {
             response = await axios.get(url, {
                 headers: {
                     'trakt-api-version': '2',
-                    'trakt-api-key': traktApiKey,
+                    'trakt-api-key': clientID, // Usa o Client ID enviado pelo usuário
                 },
                 timeout: 8000
             });
@@ -59,7 +59,6 @@ exports.handler = async (event) => {
         const wb = new Excel.Workbook();
         const ws = wb.addWorksheet('Dados');
 
-        // Adicionando cabeçalhos e a lógica de contagem
         const headers = (downloadType === 'movies') ? ['Movies', 'Times Watched', 'Last Watched'] : ['Show', 'Times Watched', 'Last Watched'];
         headers.forEach((header, index) => {
             ws.cell(1, index + 1).string(header).style({
@@ -80,7 +79,7 @@ exports.handler = async (event) => {
             const lastWatched = item.last_watched_at ? new Date(item.last_watched_at).toLocaleDateString() : 'N/A';
             
             ws.cell(count, 1).string(title);
-            ws.cell(count, 3).string(lastWatched); // Nova coluna adicionada aqui
+            ws.cell(count, 3).string(lastWatched);
             ws.cell(count, 2).number(plays);
             
             totalPlays += plays;

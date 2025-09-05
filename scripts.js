@@ -1,5 +1,6 @@
 const generateSpreadsheetButton = document.getElementById("generateSpreadsheet");
 const usernameInput = document.getElementById("username");
+const clientIDInput = document.getElementById("clientID");
 const radioButtons = document.getElementsByName('radio');
 
 generateSpreadsheetButton.addEventListener("click", function() {
@@ -12,6 +13,7 @@ generateSpreadsheetButton.addEventListener("click", function() {
     }
 
     const downloadType = tipoSelecionado.value;
+    const clientID = clientIDInput.value;
     
     // A URL aponta para a nova rota POST
     const downloadUrl = `/api/create-spreadsheet`;
@@ -19,7 +21,8 @@ generateSpreadsheetButton.addEventListener("click", function() {
     // Dados são enviados no corpo da requisição
     const requestBody = {
         username: username,
-        downloadType: downloadType
+        downloadType: downloadType,
+        clientID: clientID
     };
 
     axios.post(downloadUrl, requestBody, {
