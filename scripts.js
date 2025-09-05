@@ -6,14 +6,14 @@ const radioButtons = document.getElementsByName('radio');
 generateSpreadsheetButton.addEventListener("click", function() {
     const username = usernameInput.value;
     const tipoSelecionado = document.querySelector('input[name="radio"]:checked');
+    const clientID = clientIDInput.value;
 
-    if (!username || !tipoSelecionado) {
-        alert("Por favor, preencha o nome de usuário e selecione o tipo de download.");
+    if (!username || !tipoSelecionado || !clientID) {
+        alert("Por favor, preencha o nome de usuário, o clientId e selecione o tipo de download.");
         return;
     }
 
     const downloadType = tipoSelecionado.value;
-    const clientID = clientIDInput.value;
     
     // A URL aponta para a nova rota POST
     const downloadUrl = `/api/create-spreadsheet`;
